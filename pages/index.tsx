@@ -11,6 +11,7 @@ import { createClient } from '@/utils/supabase/server-props';
 import HikingStats from '@/components/Pages/HikingStats';
 import TripWithDates from '@/components/Tools/TripsWithDates';
 import CallToActionRegister from '@/components/Tools/CallToActionRegister';
+import CookieBanner from '@/components/Tools/CookieBanner';
 interface Profile {
   id: number;
   created_at: string;
@@ -63,6 +64,7 @@ const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
           </Box>
         </Layout>
       )}
+      <CookieBanner />
     </>
   );
 };
