@@ -50,7 +50,7 @@ const CallToActionRegister: React.FC = () => {
         </Box>
         <Box flex="1" mt={{ base: 6, md: 0 }}>
           <Image
-            src="/images/hiking.png" // Cambia esta ruta por la ruta de tu imagen relacionada con hiking o montañas
+            src="/escalada.jpg" // Cambia esta ruta por la ruta de tu imagen relacionada con hiking o montañas
             alt="Hiking"
             borderRadius="md"
             boxShadow="lg"
