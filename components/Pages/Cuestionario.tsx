@@ -20,7 +20,6 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 
 interface Question {
   id: number;
@@ -117,62 +116,34 @@ const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions
   return (
     <Center>
       <MotionBox
-        position="relative"
-        m={10}
-        width={isMobile ? "100%" : "100%"}
-        overflow="hidden"
+        display="flex"
+        alignItems="center"
+        shadow="xl"
         p={10}
+        borderRadius="md"
+        justifyContent="center"
+        position="relative"
+        border="1px solid"
+        borderColor="gray.200"
+        w={isMobile ? "100%" : "100%"}
         initial="hidden"
         animate="visible"
         variants={animationVariants}
       >
-        {isFinished ? (
-          <Center>
-            <Stack spacing={spacing} w="100%" align="center">
-              <Button color={'white'}
-                bgColor={'black'} size={buttonSize} _hover={{
-                  shadow: 'md',
-                  transform: 'scale(1.05)',
-                  transition: 'all 0.3s',
-                }} shadow={'md'} onClick={handleGetResults}>
-                Get Results
-              </Button>
-              <Button color={'white'}
-                bgColor={'black'} _hover={{
-                  shadow: 'md',
-                  transform: 'scale(1.05)',
-                  transition: 'all 0.3s',
-                }} size={buttonSize} shadow={'md'} onClick={handleReset}>
-                Repeat Questionnaire
-              </Button>
+        <Stack spacing={spacing} w="100%">
+          <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
+            {currentQuestion.text}
+          </Text>
+          <RadioGroup onChange={handleAnswerChange} value={answers[currentIndex]}>
+            <Stack spacing={spacing}>
+              {currentQuestion.options.map((option, index) => (
+                <Radio key={index} value={option} colorScheme="teal">
+                  {option}
+                </Radio>
+              ))}
             </Stack>
-          </Center>
-        ) : (
-          <Center>
-            <MotionBox display="flex" alignItems="center"
-              shadow='xl' p={10} borderRadius="md" justifyContent="center" position="relative" border="1px solid"
-              borderColor="gray.200" w={isMobile ? "100%" : "100%"}
-              initial="hidden"
-              animate="visible"
-              variants={animationVariants}
-            >
-              <Stack spacing={spacing} w="100%">
-                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-                  {currentQuestion.text}
-                </Text>
-                <RadioGroup onChange={handleAnswerChange} value={answers[currentIndex]}>
-                  <Stack spacing={spacing}>
-                    {currentQuestion.options.map((option, index) => (
-                      <Radio key={index} value={option} colorScheme="teal">
-                        {option}
-                      </Radio>
-                    ))}
-                  </Stack>
-                </RadioGroup>
-              </Stack>
-            </MotionBox>
-          </Center>
-        )}
+          </RadioGroup>
+        </Stack>
       </MotionBox>
     </Center>
   );
@@ -208,47 +179,56 @@ const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ but
 
   return (
     <Center>
-      <Box w={isMobile ? '160%' : '100%'}>
-      <Heading as="h1" p={4} textAlign="center" mb={4}>
-                ¿En qué grado te encuentras?
-              </Heading>
-              <Box m={10} p={10} rounded="lg">
-                  <Text as="article" fontSize="xl" lineHeight="tall" textAlign="center">
-                    El grado de hiking se refiere al nivel de dificultad o exigencia de una
-                    ruta o sendero.
-                  </Text>
-                </Box>
-        <MotionCenter
-          initial="hidden"
-          animate="visible"
-          variants={animationVariants}
-          transition={{ duration: 2 }}
-        >
-          <Button
-            color={'white'}
-            bgColor={'black'}
-            onClick={handleButtonClick}
-            size={isMobile ? 'md' : 'xl'}
-            fontSize={isMobile ? 'md' : 'xl'}
-            py={isMobile ? 1 : 6}
-            px={isMobile ? 6 : 8}
-            borderRadius="lg"
-            mb={4}
-            mt={10}
-            shadow={'2xl'}
-            _hover={{
-              shadow: 'md',
-              transform: 'scale(1.05)',
-              transition: 'all 0.3s',
-            }}
+      <Box
+        w={isMobile ? '160%' : '100%'}
+        position="relative"
+        bgImage="url('/carouselimage.webp')"
+        bgSize="cover"
+        bgPosition="center"
+        p={10}
+      >
+        <Box position="absolute" top="0" left="0" right="0" bottom="0" bg="blackAlpha.600" zIndex={0} />
+        <Box position="relative" zIndex={1}>
+          <Heading as="h1" p={4} textAlign="center" mb={4} color="white">
+            ¿En qué grado te encuentras?
+          </Heading>
+          <Box m={10} p={10} rounded="lg">
+            <Text as="article" fontSize="xl" lineHeight="tall" textAlign="center" color="white">
+              El grado de hiking se refiere al nivel de dificultad o exigencia de una ruta o sendero.
+            </Text>
+          </Box>
+          <MotionCenter
+            initial="hidden"
+            animate="visible"
+            variants={animationVariants}
+            transition={{ duration: 2 }}
           >
-            {buttonText}
-          </Button>
-        </MotionCenter>
+            <Button
+              color="white"
+              bgColor="black"
+              onClick={handleButtonClick}
+              size={isMobile ? 'md' : 'xl'}
+              fontSize={isMobile ? 'md' : 'xl'}
+              py={isMobile ? 1 : 6}
+              px={isMobile ? 6 : 8}
+              borderRadius="lg"
+              mb={4}
+              mt={10}
+              shadow="2xl"
+              _hover={{
+                shadow: 'md',
+                transform: 'scale(1.05)',
+                transition: 'all 0.3s',
+              }}
+            >
+              {buttonText}
+            </Button>
+          </MotionCenter>
+        </Box>
         <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="full">
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>{buttonText}</ModalHeader>
+            <ModalHeader>Test Hiking</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <CarouselQuestionnaire questions={questions} apiEndpoint={apiEndpoint} />

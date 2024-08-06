@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Center, Heading } from '@chakra-ui/react';
 import Layout from '../components/Tools/MainLayout';
 import MainLayout from '../components/Tools/MainLayout';
 import VideoHero from '@/components/Pages/HeroVideo';
@@ -37,6 +37,9 @@ const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
     <>
       {user ? (
         <MainLayout user={user}>
+          <Center>
+          <Heading>Proximas Salidas</Heading>
+          </Center>
           <TripWithDates user={user} trips={trips} />
         </MainLayout>
       ) : (
@@ -45,20 +48,20 @@ const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
             <VideoHero title="Herovideo" description="descripcion" videoSrc="example.mp4" />
           </div>
          
-         
-          <Box id="contact" py={10}>
+          <Box p={10} pt={1} m={5}>
+            <HikingStats />
+          </Box>
+          <Box id="contact" >
             <Carousel />
           </Box>
-          <Box py={10}>
+          <Box>
            <CallToActionRegister/>
            
           </Box>
-          <Box id="calendar" py={24}>
+          <Box id="calendar" py={0}>
             <Cuestionario />
           </Box>
-          <Box p={10} m={5}>
-            <HikingStats />
-          </Box>
+          
           <Box id="about" py={0}>
             <About />
           </Box>
