@@ -1,5 +1,6 @@
+// components/Pages/TripsWithDates.tsx
 import React, { useState } from 'react';
-import { Box, Center, Text, Image, Grid, GridItem, Heading, IconButton } from '@chakra-ui/react';
+import { Box, Center, Text, Image, Grid, GridItem, Heading, IconButton, Tooltip } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
 
 import { GetServerSidePropsContext } from 'next';
@@ -7,8 +8,11 @@ import { createClient } from '@/utils/supabase/server-props';
 import { User } from '@supabase/supabase-js';
 
 interface Trip {
-  date: string;
-  image: string;
+  Fecha: string;
+  Titulo: string;
+  Actividad: string;
+  Descripcion: string;
+  ImagenName: string;
 }
 
 interface TripsWithDatesProps {
@@ -25,20 +29,19 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
   // Group trips by month
-    // Group trips by month
-    const tripsByMonth = trips.reduce((acc, trip) => {
-        const tripDate = new Date(trip.date);
-        if (!isNaN(tripDate.getTime())) {
-          const month = tripDate.getMonth();
-          if (!acc[month]) acc[month] = [];
-          acc[month].push(trip);
-        } else {
-          console.error(`Invalid date: ${trip.date}`);
-        }
-        return acc;
-      }, {} as Record<number, Trip[]>);
-    
-      console.log('Trips by Month:', tripsByMonth);
+  const tripsByMonth = trips.reduce((acc, trip) => {
+    // Ensure date is correctly parsed
+    const tripDate = new Date(trip.Fecha);
+    if (!isNaN(tripDate.getTime())) {
+      const month = tripDate.getMonth();
+      if (!acc[month]) acc[month] = [];
+      acc[month].push(trip);
+    } else {
+      console.error(`Invalid date: ${trip.Fecha}`);
+    }
+    return acc;
+  }, {} as Record<number, Trip[]>);
+
   const handlePrevMonth = () => {
     setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
   };
@@ -55,7 +58,7 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
   }
 
   return (
-    <Box py={24}>
+    <Box py={10}>
       <Center mb={8}>
         <IconButton
           icon={<ArrowLeftIcon />}
@@ -77,15 +80,17 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
         {tripsByMonth[currentMonth]?.map((trip, index) => (
           <GridItem key={index} position="relative">
             <Center>
-            <Image
-              src={trip.image}
-              alt={`Trip on ${trip.date}`}
-              borderRadius="md"
-              boxSize="400px"
-              objectFit="cover"
-              w="85%"
-              h="85%"
-            />
+              <Tooltip label={trip.Actividad} aria-label="Activity Description">
+                <Image
+                  src={trip.ImagenName}
+                  alt={trip.Titulo}
+                  borderRadius="md"
+                  boxSize="400px"
+                  objectFit="cover"
+                  w="85%"
+                  h="85%"
+                />
+              </Tooltip>
             </Center>
             <Box
               position="absolute"
@@ -99,8 +104,9 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
               borderRadius="md"
             >
               <Text fontSize="md" fontWeight="bold">
-                {new Date(trip.date).toDateString()}
+                {new Date(trip.Fecha).toDateString()}
               </Text>
+              <Text fontSize="md">{trip.Descripcion}</Text>
             </Box>
           </GridItem>
         ))}
@@ -123,18 +129,25 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  // Fetch trips from your database or API
-  const trips = [
-    { date: '2024-15-07', image: '/cañonismo.jpg' },
-    { date: '2024-07-20', image: '/carouselimage.webp' },
-    { date: '2024-08-10', image: '/escalada.jpg' },
-    // Add more trips as needed
-  ];
+  // Fetch trips from Supabase
+  const { data: trips, error: tripsError } = await supabase
+    .from('Trips')
+    .select('Fecha, Titulo, Actividad, Descripcion, ImagenName');
+
+  if (tripsError) {
+    console.error('Error fetching trips:', tripsError);
+    return {
+      props: {
+        user: user.user,
+        trips: [],
+      },
+    };
+  }
 
   return {
     props: {
       user: user.user,
-      trips,
+      trips: trips || [],
     },
   };
 }

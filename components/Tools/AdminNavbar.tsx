@@ -16,12 +16,8 @@ const AdminNavbar: React.FC = () => {
       <Flex justify="space-between" align="center">
         <Heading size="md">Admin Dashboard</Heading>
         <Flex>
-          <Link href="/admin" p={2} color="white" _hover={{ textDecoration: 'none' }}>
-            Home
-          </Link>
-          <Link href="/admin/settings" p={2} color="white" _hover={{ textDecoration: 'none' }}>
-            Settings
-          </Link>
+      
+          
           <Button onClick={handleLogout} ml={4} colorScheme="red">
             Logout
           </Button>

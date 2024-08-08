@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Button, Input, FormControl, FormLabel, Textarea, useToast } from '@chakra-ui/react';
+import { Box, Button, Input, FormControl, FormLabel, Textarea, Select, useToast } from '@chakra-ui/react';
 import { createClient } from '@/utils/supabase/component';
+
+export const activities = [
+  'Senderismo', 'Media Montaña', 'Alta Montaña', 'Cañonismo', 
+  'Rafting', 'Rappel', 'Escalada', 'Kayak'
+];
 
 const UploadFormWithDetails: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
-  const [activity, setActivity] = useState('');
+  const [titulo, setTitulo] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [fecha, setFecha] = useState('');
+  const [actividad, setActividad] = useState('');
   const toast = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +20,9 @@ const UploadFormWithDetails: React.FC = () => {
       setFile(e.target.files[0]);
     }
   };
+
   const supabase = createClient();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -48,11 +55,11 @@ const UploadFormWithDetails: React.FC = () => {
       // Subir la información a Supabase
       const { error } = await supabase.from('Trips').insert([
         {
-          title,
-          description,
-          date,
-          activity,
-          imageName: fileName,
+          titulo,
+          descripcion,
+          fecha,
+          actividad,
+          imagenName: fileName,
         },
       ]);
 
@@ -66,10 +73,16 @@ const UploadFormWithDetails: React.FC = () => {
         duration: 4000,
         isClosable: true,
       });
+
+      // Limpiar el formulario después de enviar
+      setTitulo('');
+      setDescripcion('');
+      setFecha('');
+      setActividad('');
+      setFile(null);
     } catch (error) {
       toast({
         title: 'Error creating trip',
-       
         status: 'error',
         duration: 4000,
         isClosable: true,
@@ -84,39 +97,45 @@ const UploadFormWithDetails: React.FC = () => {
           <FormLabel>Upload Image</FormLabel>
           <Input type="file" onChange={handleFileChange} />
         </FormControl>
-        <FormControl id="title" mb={4}>
-          <FormLabel>Title</FormLabel>
+        <FormControl id="titulo" mb={4}>
+          <FormLabel>Título</FormLabel>
           <Input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
           />
         </FormControl>
-        <FormControl id="description" mb={4}>
-          <FormLabel>Description</FormLabel>
+        <FormControl id="descripcion" mb={4}>
+          <FormLabel>Descripción</FormLabel>
           <Textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
           />
         </FormControl>
-        <FormControl id="date" mb={4}>
-          <FormLabel>Date</FormLabel>
+        <FormControl id="fecha" mb={4}>
+          <FormLabel>Fecha</FormLabel>
           <Input
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={fecha}
+            onChange={(e) => setFecha(e.target.value)}
           />
         </FormControl>
-        <FormControl id="activity" mb={4}>
-          <FormLabel>Activity</FormLabel>
-          <Input
-            type="text"
-            value={activity}
-            onChange={(e) => setActivity(e.target.value)}
-          />
+        <FormControl id="actividad" mb={4}>
+          <FormLabel>Actividad</FormLabel>
+          <Select
+            placeholder="Selecciona una actividad"
+            value={actividad}
+            onChange={(e) => setActividad(e.target.value)}
+          >
+            {activities.map((activity, index) => (
+              <option key={index} value={activity}>
+                {activity}
+              </option>
+            ))}
+          </Select>
         </FormControl>
         <Button type="submit" colorScheme="teal">
-          Create Trip
+          Crear Viaje
         </Button>
       </form>
     </Box>
