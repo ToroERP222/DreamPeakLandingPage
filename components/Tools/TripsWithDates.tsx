@@ -8,11 +8,11 @@ import { createClient } from '@/utils/supabase/server-props';
 import { User } from '@supabase/supabase-js';
 
 interface Trip {
-  Fecha: string;
-  Titulo: string;
-  Actividad: string;
-  Descripcion: string;
-  ImagenName: string;
+  fecha: string;
+  titulo: string;
+  actividad: string;
+  descripcion: string;
+  imagenName: string;
 }
 
 interface TripsWithDatesProps {
@@ -25,19 +25,20 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
     'January', 'February', 'March', 'April', 'May', 'June', 
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+  console.log(trips)
   const currentYear = new Date().getFullYear();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
   // Group trips by month
   const tripsByMonth = trips.reduce((acc, trip) => {
     // Ensure date is correctly parsed
-    const tripDate = new Date(trip.Fecha);
+    const tripDate = new Date(trip.fecha);
     if (!isNaN(tripDate.getTime())) {
       const month = tripDate.getMonth();
       if (!acc[month]) acc[month] = [];
       acc[month].push(trip);
     } else {
-      console.error(`Invalid date: ${trip.Fecha}`);
+      console.error(`Invalid date: ${trip.fecha}`);
     }
     return acc;
   }, {} as Record<number, Trip[]>);
@@ -80,12 +81,12 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
         {tripsByMonth[currentMonth]?.map((trip, index) => (
           <GridItem key={index} position="relative">
             <Center>
-              <Tooltip label={trip.Actividad} aria-label="Activity Description">
+              <Tooltip label={trip.actividad} aria-label="Activity Description">
                 <Image
-                  src={trip.ImagenName}
-                  alt={trip.Titulo}
+                  src={`/uploads/${trip.imagenName}`}
+                  alt={trip.titulo}
                   borderRadius="md"
-                  boxSize="400px"
+                  boxSize="200px"
                   objectFit="cover"
                   w="85%"
                   h="85%"
@@ -104,9 +105,9 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
               borderRadius="md"
             >
               <Text fontSize="md" fontWeight="bold">
-                {new Date(trip.Fecha).toDateString()}
+                {new Date(trip.fecha).toDateString()}
               </Text>
-              <Text fontSize="md">{trip.Descripcion}</Text>
+              <Text fontSize="md">{trip.descripcion}</Text>
             </Box>
           </GridItem>
         ))}
@@ -132,7 +133,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // Fetch trips from Supabase
   const { data: trips, error: tripsError } = await supabase
     .from('Trips')
-    .select('Fecha, Titulo, Actividad, Descripcion, ImagenName');
+    .select('*');
 
   if (tripsError) {
     console.error('Error fetching trips:', tripsError);

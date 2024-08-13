@@ -1,36 +1,44 @@
-'use client'
-
-import { ReactNode } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
-  SimpleGrid,
   Stack,
   Text,
   Link,
   useColorModeValue,
-  VStack,
-  HStack,
-  IconButton,
+  VisuallyHidden,
+  chakra,
 } from '@chakra-ui/react';
-import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa';
 
-const Logo = (props: any) => {
+const SocialButton = ({
+  children,
+  label,
+  href,
+}: {
+  children: React.ReactNode;
+  label: string;
+  href: string;
+}) => {
   return (
-    <svg
-      height={32}
-      viewBox="0 0 120 28"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-      aria-label="Company Logo"
-    >
-      {/* Aquí iría el contenido SVG del logo */}
-      <path
-        d="M34.87 8.07H37.87V20.2H34.87V8.07Z"
-        fill="currentColor"
-      />
-      {/* Otros paths aquí */}
-    </svg>
+    <chakra.button
+      bg={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+      rounded={'full'}
+      w={8}
+      h={8}
+      cursor={'pointer'}
+      as={'a'}
+      href={href}
+      display={'inline-flex'}
+      alignItems={'center'}
+      justifyContent={'center'}
+      transition={'background 0.3s ease'}
+      _hover={{
+        bg: useColorModeValue('blackAlpha.200', 'whiteAlpha.200'),
+      }}>
+      <VisuallyHidden>{label}</VisuallyHidden>
+      {children}
+    </chakra.button>
   );
 };
 
@@ -38,65 +46,48 @@ const Footer = () => {
   return (
     <Box
       bg={useColorModeValue('gray.50', 'gray.900')}
-      color={useColorModeValue('gray.700', 'gray.200')}
-      as="footer"
-      role="contentinfo"
-      aria-label="Main Footer"
-      padding="4"
-    >
-      <Container as={Stack} maxW="6xl" py={10}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
-          <Stack spacing={6}>
-            <Box>
-              <Logo color={useColorModeValue('gray.700', 'white')} />
-            </Box>
-            <Text fontSize="sm">
-              © {new Date().getFullYear()} Company Name. All rights reserved.
-            </Text>
-          </Stack>
-
-          <Stack align="flex-start">
-            <Text fontWeight="bold" fontSize="lg">Company</Text>
-            <Link href="#about" aria-label="About Us">About Us</Link>
-            <Link href="#services" aria-label="Our Services">Our Services</Link>
-            <Link href="#contact" aria-label="Contact Us">Contact</Link>
-            <Link href="#privacy" aria-label="Privacy Policy">Privacy Policy</Link>
-          </Stack>
-
-          <Stack align="flex-start">
-            <Text fontWeight="bold" fontSize="lg">Follow Us</Text>
-            <HStack spacing={6}>
-              <IconButton
-                as="a"
-                href="https://www.facebook.com"
-                aria-label="Facebook"
-                icon={<FaFacebook />}
-                variant="ghost"
-                size="lg"
-                isRound
-              />
-              <IconButton
-                as="a"
-                href="https://www.twitter.com"
-                aria-label="Twitter"
-                icon={<FaTwitter />}
-                variant="ghost"
-                size="lg"
-                isRound
-              />
-              <IconButton
-                as="a"
-                href="https://www.linkedin.com"
-                aria-label="LinkedIn"
-                icon={<FaLinkedin />}
-                variant="ghost"
-                size="lg"
-                isRound
-              />
-            </HStack>
-          </Stack>
-        </SimpleGrid>
+      color={useColorModeValue('gray.700', 'gray.200')}>
+      <Container
+        as={Stack}
+        maxW={'6xl'}
+        py={4}
+        spacing={4}
+        justify={'center'}
+        align={'center'}>
+        <Stack direction={'row'} spacing={6}>
+          <Link href={'#'}>Home</Link>
+          <Link href={'#'}>About</Link>
+          <Link href={'#'}>Contact</Link>
+          <Link href={'#'}>Privacy Policy</Link>
+        </Stack>
       </Container>
+
+      <Box
+        borderTopWidth={1}
+        borderStyle={'solid'}
+        borderColor={useColorModeValue('gray.200', 'gray.700')}>
+        <Container
+          as={Stack}
+          maxW={'6xl'}
+          py={4}
+          direction={{ base: 'column', md: 'row' }}
+          spacing={4}
+          justify={{ base: 'center', md: 'space-between' }}
+          align={{ base: 'center', md: 'center' }}>
+          <Text>© 2023 Your Company. All rights reserved.</Text>
+          <Stack direction={'row'} spacing={6}>
+            <SocialButton label={'Facebook'} href={'#'}>
+              <FaFacebook />
+            </SocialButton>
+            <SocialButton label={'Twitter'} href={'#'}>
+              <FaTwitter />
+            </SocialButton>
+            <SocialButton label={'Instagram'} href={'#'}>
+              <FaInstagram />
+            </SocialButton>
+          </Stack>
+        </Container>
+      </Box>
     </Box>
   );
 };
