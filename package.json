@@ -39,6 +39,7 @@
     "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.10.3",
     "react-slick": "^0.30.2",
+    "sharp": "^0.33.5",
     "video-react": "^0.16.0",
     "yup": "^1.4.0"
   },
