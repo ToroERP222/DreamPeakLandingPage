@@ -159,6 +159,7 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
             key={index}
             height={{ base: '400px', md: '800px' }}
             position="relative"
+            w={'100%'}
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
@@ -195,7 +196,7 @@ const CaptionCarousel: React.FC<CaptionCarouselProps> = ({ cards }) => {
   return (
     <>
       {isMobile ? (
-        <MobileCaptionCarousel cards={cards} width="160%" />
+        <MobileCaptionCarousel cards={cards} width="100%" />
       ) : (
         <CaptionCarouselDesktop cards={cards} />
       )}

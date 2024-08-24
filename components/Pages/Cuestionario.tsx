@@ -4,10 +4,10 @@ import {
   Button,
   Stack,
   Text,
-  useToast,
   Radio,
   RadioGroup,
   Center,
+  useToast,
   useBreakpointValue,
   Modal,
   ModalOverlay,
@@ -18,84 +18,58 @@ import {
   useMediaQuery,
   Heading,
 } from '@chakra-ui/react';
-import axios from 'axios';
 import { motion } from 'framer-motion';
 
 interface Question {
   id: number;
   text: string;
-  options: string[];
+  options: { label: string; value: number }[];
 }
 
 interface CarouselQuestionnaireProps {
   questions: Question[];
-  apiEndpoint: string;
 }
 
-const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions, apiEndpoint }) => {
+const getDifficultyLevel = (totalScore: number) => {
+  if (totalScore >= 5 && totalScore <= 9) return 'Nivel 1 (Iniciación)';
+  if (totalScore >= 10 && totalScore <= 14) return 'Nivel 2 (Bajo)';
+  if (totalScore >= 15 && totalScore <= 19) return 'Nivel 3 (Medio-Bajo)';
+  if (totalScore >= 20 && totalScore <= 22) return 'Nivel 4 (Medio-Alto)';
+  if (totalScore >= 23 && totalScore <= 25) return 'Nivel 5 (Avanzado)';
+  return 'Puntaje fuera de rango';
+};
+
+const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<string[]>(Array(questions.length).fill(''));
+  const [answers, setAnswers] = useState<number[]>(Array(questions.length).fill(0));
   const [isFinished, setIsFinished] = useState(false);
+  const [totalScore, setTotalScore] = useState<number | null>(null);
   const toast = useToast();
 
-  const handlePrev = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? questions.length - 1 : prevIndex - 1));
-  }, [questions.length]);
+  const handleAnswerChange = useCallback(
+    (answer: number) => {
+      setAnswers((prevAnswers) => {
+        const newAnswers = [...prevAnswers];
+        newAnswers[currentIndex] = answer;
+        return newAnswers;
+      });
 
-  const handleNext = useCallback(() => {
-    if (currentIndex === questions.length - 1) {
-      setIsFinished(true);
-    } else {
-      setCurrentIndex((prevIndex) => (prevIndex === questions.length - 1 ? 0 : prevIndex + 1));
-    }
-  }, [currentIndex, questions.length]);
-
-  const handleAnswerChange = useCallback(async (answer: string) => {
-    setAnswers((prevAnswers) => {
-      const newAnswers = [...prevAnswers];
-      newAnswers[currentIndex] = answer;
-      return newAnswers;
-    });
-
-    if (currentIndex === questions.length - 1) {
-      try {
-        await axios.post(apiEndpoint, { answers });
-        toast({
-          title: "Answers submitted.",
-          description: "Your answers have been submitted successfully.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      } catch (error) {
-        toast({
-          title: "Error submitting answers.",
-          description: "There was an error submitting your answers. Please try again.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+      if (currentIndex === questions.length - 1) {
+        setIsFinished(true);
+        const score = answers.reduce((acc, cur) => acc + cur, 0) + answer;
+        setTotalScore(score);
+      } else {
+        setCurrentIndex((prevIndex) => prevIndex + 1);
       }
-      setIsFinished(true);
-    } else {
-      handleNext();
-    }
-  }, [currentIndex, questions.length, apiEndpoint, answers, toast, handleNext]);
+    },
+    [currentIndex, questions.length, answers]
+  );
 
   const handleReset = () => {
-    setAnswers(Array(questions.length).fill(''));
+    setAnswers(Array(questions.length).fill(0));
     setCurrentIndex(0);
     setIsFinished(false);
-  };
-
-  const handleGetResults = () => {
-    toast({
-      title: "Get Results",
-      description: "Fetching results...",
-      status: "info",
-      duration: 3000,
-      isClosable: true,
-    });
+    setTotalScore(null);
   };
 
   const currentQuestion = useMemo(() => questions[currentIndex], [currentIndex, questions]);
@@ -131,18 +105,31 @@ const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions
         variants={animationVariants}
       >
         <Stack spacing={spacing} w="100%">
-          <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-            {currentQuestion.text}
-          </Text>
-          <RadioGroup onChange={handleAnswerChange} value={answers[currentIndex]}>
-            <Stack spacing={spacing}>
-              {currentQuestion.options.map((option, index) => (
-                <Radio key={index} value={option} colorScheme="teal">
-                  {option}
-                </Radio>
-              ))}
-            </Stack>
-          </RadioGroup>
+          {isFinished && totalScore !== null ? (
+            <>
+              <Heading size="lg" textAlign="center">
+                {getDifficultyLevel(totalScore)}
+              </Heading>
+              <Button onClick={handleReset} size={buttonSize} colorScheme="teal">
+                Reiniciar
+              </Button>
+            </>
+          ) : (
+            <>
+              <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
+                {currentQuestion.text}
+              </Text>
+              <RadioGroup onChange={(value) => handleAnswerChange(parseInt(value))} value={answers[currentIndex].toString()}>
+                <Stack spacing={spacing}>
+                  {currentQuestion.options.map((option, index) => (
+                    <Radio key={index} value={option.value.toString()} colorScheme="teal">
+                      {option.label}
+                    </Radio>
+                  ))}
+                </Stack>
+              </RadioGroup>
+            </>
+          )}
         </Stack>
       </MotionBox>
     </Center>
@@ -152,10 +139,9 @@ const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions
 interface ResponsiveSEOButtonModalProps {
   buttonText: string;
   questions: Question[];
-  apiEndpoint: string;
 }
 
-const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ buttonText, questions, apiEndpoint }) => {
+const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ buttonText, questions }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isMobile] = useMediaQuery('(max-width: 315px)');
 
@@ -180,9 +166,9 @@ const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ but
   return (
     <Center>
       <Box
-        w={isMobile ? '160%' : '100%'}
+        w={isMobile ? '160%' : '120%'}
         position="relative"
-        bgImage="url('/carouselimage.webp')"
+        bgImage="url('/fondo4.jpg')"
         bgSize="cover"
         bgPosition="center"
         p={10}
@@ -231,7 +217,7 @@ const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ but
             <ModalHeader>Test Hiking</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <CarouselQuestionnaire questions={questions} apiEndpoint={apiEndpoint} />
+              <CarouselQuestionnaire questions={questions} />
             </ModalBody>
           </ModalContent>
         </Modal>
@@ -241,19 +227,65 @@ const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ but
 };
 
 const Cuestionario: React.FC = () => {
-  const questions = [
-    { id: 1, text: "What is your favorite color?", options: ["Red", "Blue", "Green", "Yellow"] },
-    { id: 2, text: "What is your preferred mode of transport?", options: ["Car", "Bike", "Bus", "Walk"] },
-    { id: 3, text: "What type of cuisine do you prefer?", options: ["Italian", "Chinese", "Mexican", "Indian"] }
+  const questions: Question[] = [
+    {
+      id: 1,
+      text: "¿Con qué frecuencia participas en caminatas o senderismo?",
+      options: [
+        { label: "Nunca he participado.", value: 1 },
+        { label: "Rara vez, menos de una vez al año.", value: 2 },
+        { label: "Ocasionalmente, unas pocas veces al año.", value: 3 },
+        { label: "Regularmente, al menos una vez al mes.", value: 4 },
+        { label: "Frecuentemente, varias veces al mes.", value: 5 },
+      ],
+    },
+    {
+      id: 2,
+      text: "¿Cuál es tu experiencia caminando en terrenos técnicos (roca, nieve, hielo)?",
+      options: [
+        { label: "Ninguna experiencia.", value: 1 },
+        { label: "Muy poca, he caminado por senderos sencillos.", value: 2 },
+        { label: "Alguna experiencia en senderos con pequeñas dificultades técnicas.", value: 3 },
+        { label: "Experiencia moderada en terrenos más exigentes.", value: 4 },
+        { label: "Amplia experiencia, incluyendo alta montaña y terrenos difíciles.", value: 5 },
+      ],
+    },
+    {
+      id: 3,
+      text: "Evalúa tu condición física:",
+      options: [
+        { label: "No realizo actividad física regularmente.", value: 1 },
+        { label: "Realizo ejercicio de forma esporádica.", value: 2 },
+        { label: "Realizo ejercicio moderado de forma regular.", value: 3 },
+        { label: "Tengo buena condición física y entreno regularmente.", value: 4 },
+        { label: "Estoy en excelente condición física y entreno intensamente.", value: 5 },
+      ],
+    },
+    {
+      id: 4,
+      text: "¿Cuál es la duración promedio de tus caminatas o rutas?",
+      options: [
+        { label: "Menos de 2 horas.", value: 1 },
+        { label: "Entre 2 y 4 horas.", value: 2 },
+        { label: "Entre 4 y 6 horas.", value: 3 },
+        { label: "Entre 6 y 8 horas.", value: 4 },
+        { label: "Más de 8 horas.", value: 5 },
+      ],
+    },
+    {
+      id: 5,
+      text: "¿Cuál es el nivel máximo de altitud que has alcanzado en tus caminatas?",
+      options: [
+        { label: "Menos de 500 metros sobre el nivel del mar.", value: 1 },
+        { label: "500 - 1000 metros sobre el nivel del mar.", value: 2 },
+        { label: "1000 - 2000 metros sobre el nivel del mar.", value: 3 },
+        { label: "2000 - 3000 metros sobre el nivel del mar.", value: 4 },
+        { label: "Más de 3000 metros sobre el nivel del mar.", value: 5 },
+      ],
+    },
   ];
 
-  const apiEndpoint = 'https://example.com/api/submit'; // Replace with your actual API endpoint
-
-  return (
-    <Box>
-      <ResponsiveSEOButtonModal buttonText="Abrir Test" questions={questions} apiEndpoint={apiEndpoint} />
-    </Box>
-  );
+  return <ResponsiveSEOButtonModal buttonText="Empezar" questions={questions} />;
 };
 
 export default Cuestionario;
