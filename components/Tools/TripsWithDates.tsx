@@ -1,6 +1,5 @@
-// components/Pages/TripsWithDates.tsx
 import React, { useState } from 'react';
-import { Box, Center, Text, Image, Grid, GridItem, Heading, IconButton, Tooltip } from '@chakra-ui/react';
+import { Box, Center, Text, Image, Grid, GridItem, Heading, IconButton } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
 
 import { GetServerSidePropsContext } from 'next';
@@ -25,13 +24,12 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
     'January', 'February', 'March', 'April', 'May', 'June', 
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  console.log(trips)
+
   const currentYear = new Date().getFullYear();
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
-  // Group trips by month
+  // Agrupar los viajes por mes
   const tripsByMonth = trips.reduce((acc, trip) => {
-    // Ensure date is correctly parsed
     const tripDate = new Date(trip.fecha);
     if (!isNaN(tripDate.getTime())) {
       const month = tripDate.getMonth();
@@ -80,19 +78,53 @@ const TripsWithDates: React.FC<TripsWithDatesProps> = ({ user, trips }) => {
       <Grid templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap={6}>
         {tripsByMonth[currentMonth]?.map((trip, index) => (
           <GridItem key={index} position="relative">
-            <Center>
-              <Tooltip label={trip.actividad} aria-label="Activity Description">
-                <Image
-                  src={`/uploads/${trip.imagenName}`}
-                  alt={trip.titulo}
-                  borderRadius="md"
-                  boxSize="200px"
-                  objectFit="cover"
-                  w="85%"
-                  h="85%"
-                />
-              </Tooltip>
-            </Center>
+            <Box
+              position="relative"
+              borderRadius="md"
+              overflow="hidden"
+              boxShadow="md"
+              _hover={{
+                '& img': { opacity: 0.3 },
+                '& .overlay': { opacity: 1 },
+              }}
+            >
+              <Center>
+              {/* Imagen del viaje */}
+              <Image
+                src={`/uploads/${trip.imagenName}`}
+                alt={trip.titulo}
+                borderRadius="md"
+                boxSize="150px"
+                objectFit="cover"
+                w="100%"
+                h="auto"
+                maxH="450px" 
+                maxW={"450px"} // Establece la altura máxima para reducir la imagen
+                transition="opacity 0.3s ease"
+              />
+             
+              {/* Overlay de actividad */}
+              <Box
+                className="overlay"
+                position="absolute"
+                top={0}
+                left={0}
+                width="100%"
+                height="100%"
+                bg="rgba(0, 0, 0, 0.7)"
+                color="white"
+                opacity={0}
+                transition="opacity 0.3s ease"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text fontSize="lg" fontWeight="bold">
+                  {trip.actividad}
+                </Text>
+              </Box>
+              </Center>
+            </Box>
             <Box
               position="absolute"
               bottom={0}

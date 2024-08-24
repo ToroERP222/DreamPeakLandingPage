@@ -16,6 +16,7 @@ import {
   MenuItem,
   MenuDivider,
   Center,
+  Image
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
@@ -69,7 +70,9 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
+  const handleLogoClick = () => {
+    router.push('/'); // Redirect to homepage when logo is clicked
+  };
   return (
     <>
       <Box
@@ -77,7 +80,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
         px={4}
         position="fixed"
         width="100%"
-        zIndex="1"
+        zIndex="3"
         css={{
           backdropFilter: 'blur(10px)',
         }}
@@ -91,7 +94,9 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
+          <Box onClick={handleLogoClick} cursor="pointer">
+              <Image src="/Logo2.png" alt="Logo" boxSize="80px" />
+            </Box>
             {!isAuthPage && !user && (
               <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
                 {Links.map((link) => (

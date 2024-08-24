@@ -108,7 +108,7 @@ const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions
   const animationVariants = {
     hidden: { opacity: 0 },
     visible: {
-      opacity: 1,
+      opacity: 2,
       transition: { duration: 1 },
     },
   };

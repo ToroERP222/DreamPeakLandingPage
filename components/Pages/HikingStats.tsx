@@ -1,71 +1,106 @@
 import React from 'react';
-import { Box, Flex, Text, useMediaQuery, Icon, BoxProps, FlexProps, Heading, Center } from '@chakra-ui/react';
-import { FaMountain, FaHiking, FaMapSigns } from 'react-icons/fa';
+import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 
-interface StatsCardProps {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-}
-
-const StatsCard: React.FC<StatsCardProps> = ({ icon, title, description }) => (
-  <Box
-    bg="white"
-    p={6}
-    borderRadius="md"
-    textAlign="center"
-    boxShadow="lg"
-    flex="1"
-    m={2}
-    maxW={{ base: "90%", md: "30%" }}
-  >
-    <Icon as={icon} w={12} h={12} color="blue.500" mb={4} />
-    <Text fontSize="3xl" fontWeight="bold" color="black">
-      {title}
-    </Text>
-    <Text color="gray.700">{description}</Text>
-  </Box>
-);
-
-const HikingStats: React.FC = () => {
-  const [isMobile] = useMediaQuery("(max-width: 768px)");
+const DreamPeakComponent: React.FC = () => {
+  // Determine text size and padding based on screen size
+  const headingSize = useBreakpointValue({ base: '2xl', md: '3xl' });
+  const fontSize = useBreakpointValue({ base: 'lg', md: 'xl' });
+  const padding = useBreakpointValue({ base: 4, md: 10 });
 
   return (
-    <>
-    <Box my={6}>
-        <Center>
-        <Heading>
-            Somos Dream Peak, ven y aventurate
-        </Heading>
-        </Center>
-    </Box>
-    <Box bg="black" py={10} px={4} borderRadius={'xl'} boxShadow="xl">
+    <Box
+      position="relative"
+      height="100vh"
+      backgroundImage="url('/fondo3.jpg')"  // Replace with your image path
+      backgroundSize="cover"
+      backgroundPosition="center"
+    >
+      {/* Overlay for darkening the background image */}
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        backgroundColor="rgba(0, 0, 0, 0.6)"
+        zIndex={1} // Ensure the overlay is below the text
+      />
 
       <Flex
-        direction={isMobile ? "column" : "row"}
-        align="center"
-        justify="center"
-        wrap="wrap"
+        direction={{ base: 'column', md: 'row' }}  // Stack vertically on small screens
+        justifyContent="center"
+        alignItems="center"
+        p={padding}
+        height="100%"
+        zIndex={2} // Ensure the content is above the overlay
+        position="relative"
+        textAlign={{ base: 'center', md: 'left' }} // Center text on small screens
       >
-        <StatsCard
-          icon={FaMountain}
-          title="100+"
-          description="Hiking trails explored in 2024"
-        />
-        <StatsCard
-          icon={FaHiking}
-          title="5,000+"
-          description="Happy hikers guided this year"
-        />
-        <StatsCard
-          icon={FaMapSigns}
-          title="500km"
-          description="Total distance covered"
-        />
+        {/* Left-aligned content on medium screens and up */}
+        <Box
+          flex="1"
+          maxWidth={{ base: '100%', md: '50%' }}
+          textAlign={{ base: 'center', md: 'left' }}
+          mb={{ base: 8, md: 0 }}
+        >
+          <Heading
+            as="h1"
+            size={headingSize}
+            mb={2}
+            
+            fontWeight="bold"
+            color="#FFFFFF"  // Pure white color
+            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+          >
+            DREAM PEAK.
+          </Heading>
+          <Text
+            fontSize={fontSize}
+            mb={6}
+            color="#FFFFFF"  // Pure white color
+            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+          >
+            THE TRAVEL OUTDOOR COMPANY.
+          </Text>
+        </Box>
+
+        {/* Right-aligned content on medium screens and up */}
+        <Box
+          flex="1"
+          maxWidth={{ base: '100%', md: '50%' }}
+          textAlign={{ base: 'center', md: 'right' }}
+        >
+          <Text
+            fontSize={fontSize}
+            lineHeight="1.8"
+            color="#FFFFFF"  // Pure white color
+            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)" 
+            textAlign="justify" 
+          >
+            DREAM PEAK está formado por amantes de la aventura y los deportes. 
+            <br/>
+            Es por eso que queremos compartirte nuestra pasión. 
+            <br/>
+            Te invitamos a acompañarnos recorriendo cañones, desiertos, bosques 
+            <br/>
+            o escalando montañas.
+            <br /><br />
+            Nuestros guías cuentan con experiencia en senderismo, montañismo, 
+            <br/>
+            técnicas verticales, así como rescate y primeros auxilios profesionales.
+             <br/>
+             No importa la situación, siempre estarás acompañado 
+             <br/>
+             por profesionales listos para apoyarte en lo que necesites.
+            <br /><br />
+            En todas nuestras salidas a montaña se te proporcionará 
+            <br/>
+            el equipo necesario para llevar a cabo la actividad requerida de manera segura.
+          </Text>
+        </Box>
       </Flex>
     </Box>
-    </>
   );
 };
 
-export default HikingStats;
+export default DreamPeakComponent;

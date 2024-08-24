@@ -13,6 +13,7 @@ const UploadFormWithDetails: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
   const [fecha, setFecha] = useState('');
   const [actividad, setActividad] = useState('');
+  const [grado, setGrado] = useState('');
   const toast = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +60,7 @@ const UploadFormWithDetails: React.FC = () => {
           descripcion,
           fecha,
           actividad,
+          grado,
           imagenName: fileName,
         },
       ]);
@@ -111,6 +113,17 @@ const UploadFormWithDetails: React.FC = () => {
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
           />
+        </FormControl>
+        <FormControl id="grado" mb={4}>
+          <FormLabel>Grado</FormLabel>
+          <Select
+            value={grado}
+            onChange={(e) => setGrado(e.target.value)}
+          >
+            <option value="Facil">Fácil</option>
+            <option value="Intermedio">Intermedio</option>
+            <option value="Avanzado">Avanzado</option>
+          </Select>
         </FormControl>
         <FormControl id="fecha" mb={4}>
           <FormLabel>Fecha</FormLabel>

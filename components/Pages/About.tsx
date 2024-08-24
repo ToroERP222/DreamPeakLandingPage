@@ -9,27 +9,31 @@ interface Course {
   description: string;
   image: string;
   link: string;
+  guide: string; // New field for guide
 }
 
 // Data for fitness courses
 const courses: Course[] = [
   {
-    title: 'Basic Fitness',
-    description: 'Get started with basic fitness exercises and routines.',
+    title: 'Explora Montañas',
+    description: 'Aventúrate a conquistar las majestuosas montañas de México con expertos.',
     image: '/carouselimage.webp',
-    link: '/courses/basic-fitness',
+    link: '/courses/explora-montanas',
+    guide: 'Guía: Carlos López',
   },
   {
-    title: 'Advanced Muscle Course',
-    description: 'Build muscle mass and strength with our advanced muscle training program.',
+    title: 'Senderismo Natural',
+    description: 'Sumérgete en la diversidad de biomas y ecosistemas con nuestro equipo.',
     image: '/carouselimage.webp',
-    link: '/courses/advanced-muscle',
+    link: '/courses/senderismo-natural',
+    guide: 'Guía: Ana Martínez',
   },
   {
-    title: 'New Gym Training',
-    description: 'Start your gym journey with our comprehensive training program.',
+    title: 'Cumbres Internacionales',
+    description: 'Desafía las cumbres más impresionantes del mundo en una experiencia única.',
     image: '/carouselimage.webp',
-    link: '/courses/new-gym',
+    link: '/courses/cumbres-internacionales',
+    guide: 'Guía: Roberto Díaz',
   },
   // Other course data...
 ];
@@ -40,9 +44,10 @@ interface CourseCardProps {
   description: string;
   image: string;
   link: string;
+  guide: string; // New prop for guide
 }
 
-const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link, guide }) => {
   const controls = useAnimation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -102,7 +107,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
             <Heading size="md" as="h3" mb={2}>
               {title}
             </Heading>
-            <Text fontSize="sm">{description}</Text>
+            <Text fontSize="sm" mb={2}>{description}</Text>
+            <Text fontSize="xs" color="gray.600">{guide}</Text> {/* Display guide name */}
           </Box>
         </Center>
       </Box>
@@ -111,11 +117,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
 };
 
 const About: React.FC = () => {
-    const [isMobile] = useMediaQuery('(max-width: 325px)');
+  const [isMobile] = useMediaQuery('(max-width: 325px)');
   const bg = useColorModeValue('gray.100', 'gray.800');
 
   return (
-    <Box bg={bg} p={8} w={isMobile ? '160%': '100%'}>
+    <Box bg={bg} p={8} w={isMobile ? '160%' : '100%'}>
       <Flex direction="column" alignItems="center">
         <Center>
           <Heading as="h1" size="2xl" mb={4}>
@@ -123,8 +129,7 @@ const About: React.FC = () => {
           </Heading>
         </Center>
         <Text mb={8}>
-          En nuestro equipo de expertos en hiking, cada miembro comparte una pasión innegable por la naturaleza y la
-          aventura al aire libre.
+          DreamPeak conecta a las personas con la naturaleza a través de aventuras que inspiran respeto y crecimiento.
         </Text>
         <Flex
           alignItems="center"

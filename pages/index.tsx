@@ -5,6 +5,7 @@ import Layout from '../components/Tools/MainLayout';
 import MainLayout from '../components/Tools/MainLayout';
 import VideoHero from '@/components/Pages/HeroVideo';
 import Carousel from '@/components/Pages/Carousel';
+import Card from '@/components/Pages/Carousel'
 import Cuestionario from '@/components/Pages/Cuestionario';
 import About from '@/components/Pages/About';
 import { GetServerSidePropsContext } from 'next';
@@ -42,54 +43,40 @@ interface HomeProps {
   trips: Trip[];
 }
 
-const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
-  return (
-    <>
-      {user ? (
-        <MainLayout user={user}>
-          <Center>
-            <Heading>Proximas Salidas</Heading>
-          </Center>
-          <TripWithDates user={user} trips={trips} />
-        </MainLayout>
-      ) : (
-        <Layout user={null}>
-          <div style={{ marginTop: -80 }}>
-            <VideoHero title="Herovideo" description="descripcion" videoSrc="example.mp4" />
-          </div>
-          <Box p={10} pt={1} m={5}>
-            <HikingStats />
-          </Box>
-          <Box id="contact">
-            <Carousel />
-          </Box>
-          <Box>
-            <CallToActionRegister />
-          </Box>
-          <Box id="calendar" py={0}>
-            <Cuestionario />
-          </Box>
-          <Box id="about" py={0}>
-            <About />
-          </Box>
-        </Layout>
-      )}
-      <CookieBanner />
-    </>
-  );
-};
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const supabase = createClient(context);
 
   // Fetch user data
   const { data: userData, error: userError } = await supabase.auth.getUser();
+  console.log("User Data:", userData);
+  
   if (userError || !userData) {
+    console.log("No user logged in");
+    
+    // Fetch trips data even if the user is not logged in
+    const { data: tripsData, error: tripsError } = await supabase
+      .from('Trips')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(3);
+    
+    if (tripsError) {
+      console.error('Error fetching trips:', tripsError);
+      return {
+        props: {
+          user: null,
+          profile: null,
+          trips: [],
+        },
+      };
+    }
+    
+
     return {
       props: {
         user: null,
         profile: null,
-        trips: [],
+        trips: tripsData || [], // Ensure trips is an array
       },
     };
   }
@@ -127,9 +114,45 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       user: user,
       profile: profileData || null,
-      trips: tripsData as Trip[], // Ensure type matches
+      trips: tripsData || [], // Ensure trips is an array
     },
   };
 }
-
-export default Home;
+const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
+  console.log(trips)
+  return (
+    <>
+      {user ? (
+        <MainLayout user={user}>
+          <Center>
+            <Heading>Proximas Salidas</Heading>
+          </Center>
+          <TripWithDates user={user} trips={trips} />
+        </MainLayout>
+      ) : (
+        <Layout user={null}>
+          <div style={{ marginTop: -80 }}>
+            <VideoHero logoSrc='/Logo.png' description="descripcion" videoSrc="0822.mp4" />
+          </div>
+          <Box  >
+            <HikingStats />
+          </Box>
+          <Box >
+            <Carousel cards={trips || []} />
+          </Box>
+          <Box id="contact">
+            <CallToActionRegister />
+          </Box>
+          <Box id="calendar" py={0}>
+            <Cuestionario />
+          </Box>
+          <Box id="about" py={0}>
+            <About />
+          </Box>
+        </Layout>
+      )}
+      <CookieBanner />
+    </>
+  );
+};
+export default Home

@@ -45,7 +45,7 @@ const CallToActionRegister: React.FC = () => {
         bg={bgColor}
         p={8}
         borderRadius="md"
-        boxShadow="lg"
+       
         maxWidth="800px"
         mx="auto"
         initial="hidden"
@@ -83,7 +83,7 @@ const CallToActionRegister: React.FC = () => {
         </MotionBox>
         <Box flex="1" mt={{ base: 6, md: 0 }}>
           <Image
-            src="/escalada.jpg"
+            src="/fondo2.jpg"
             alt="Hiking"
             borderRadius="md"
             boxShadow="lg"

@@ -12,6 +12,20 @@ import {
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
 import Slider from 'react-slick';
 import { motion } from 'framer-motion';
+
+
+interface Trip {
+  fecha: string;
+  titulo: string;
+  actividad: string;
+  descripcion: string;
+  imagenName: string;
+}
+
+interface CaptionCarouselProps {
+  cards: Trip[];
+}
+
 // Settings for the slider
 const settings = {
   dots: true,
@@ -25,30 +39,6 @@ const settings = {
   slidesToScroll: 1,
 };
 
-interface Card {
-  title: string;
-  text: string;
-  image: string;
-}
-
-const cards: Card[] = [
-  {
-    title: 'Design Projects 1',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-  {
-    title: 'Design Projects 2',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-  {
-    title: 'Design Projects 3',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-];
-
 const mobileSettings = {
   dots: true,
   arrows: false,
@@ -61,38 +51,10 @@ const mobileSettings = {
   slidesToScroll: 1,
 };
 
-const mobileCards = [
-  {
-    title: 'Design Projects 1',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-  {
-    title: 'Design Projects 2',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-  {
-    title: 'Design Projects 3',
-    text: "The project board is an exclusive resource for contract work. It's perfect for freelancers, agencies, and moonlighters.",
-    image: 'carouselimage.webp',
-  },
-];
-
-
-interface MobileCaptionCarouselProps {
-  width: string;
-}
-
-const MobileCaptionCarousel: React.FC<MobileCaptionCarouselProps> = ({ width }) => {
+const MobileCaptionCarousel: React.FC<{ cards: Trip[], width: string }> = ({ cards, width }) => {
+  console.log("trips mobile",cards)
   return (
-    <Box
-      position="relative"
-      height="930px"
-      width={width}
-      overflow="hidden"
-    >
-      {/* CSS files for react-slick */}
+    <Box position="relative" height="930px" width={width} overflow="hidden">
       <link
         rel="stylesheet"
         type="text/css"
@@ -106,7 +68,7 @@ const MobileCaptionCarousel: React.FC<MobileCaptionCarouselProps> = ({ width }) 
       />
 
       <Slider {...mobileSettings}>
-        {mobileCards.map((card, index) => (
+        {cards.map((card, index) => (
           <Box
             key={index}
             height="930px"
@@ -114,7 +76,7 @@ const MobileCaptionCarousel: React.FC<MobileCaptionCarouselProps> = ({ width }) 
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            backgroundImage={`url(${card.image})`}
+            backgroundImage={`url(${card.imagenName})`}
           >
             <Container size="container.sm" height="100%" position="relative">
               <Stack
@@ -128,17 +90,11 @@ const MobileCaptionCarousel: React.FC<MobileCaptionCarouselProps> = ({ width }) 
                 p={4}
                 borderRadius="md"
               >
-                <Heading
-                  fontSize="2xl"
-                  color="white"
-                >
-                  {card.title}
+                <Heading fontSize="2xl" color="black">
+                  {card.titulo}
                 </Heading>
-                <Text
-                  fontSize="sm"
-                  color="white"
-                >
-                  {card.text}
+                <Text fontSize="sm" color="white">
+                  {card.descripcion}
                 </Text>
               </Stack>
             </Container>
@@ -149,22 +105,14 @@ const MobileCaptionCarousel: React.FC<MobileCaptionCarouselProps> = ({ width }) 
   );
 };
 
-
-
-const CaptionCarouselDesktop: React.FC = () => {
+const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
+  console.log("trips desktop",cards)
   const [slider, setSlider] = useState<Slider | null>(null);
-
   const top = useBreakpointValue({ base: '90%', md: '50%' });
   const side = useBreakpointValue({ base: '10%', md: '40px' });
 
   return (
-    <Box
-      position="relative"
-      height={{ base: '400px', md: '600px' }}
-      width="full"
-      overflow="hidden"
-    >
-      {/* CSS files for react-slick */}
+    <Box position="relative" height={{ base: '400px', md: '600px' }} width="full" overflow="hidden">
       <link
         rel="stylesheet"
         type="text/css"
@@ -209,15 +157,14 @@ const CaptionCarouselDesktop: React.FC = () => {
         {cards.map((card, index) => (
           <Box
             key={index}
-            height={{ base: '400px', md: '600px' }}
+            height={{ base: '400px', md: '800px' }}
             position="relative"
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            backgroundImage={`url(${card.image})`}
+            backgroundImage={`/uploads/${card.imagenName}`}
           >
             <Container size="container.lg" height="100%" position="relative">
-              
               <Stack
                 spacing={6}
                 w="full"
@@ -229,18 +176,7 @@ const CaptionCarouselDesktop: React.FC = () => {
                 p={4}
                 borderRadius="md"
               >
-                <Heading
-                  fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
-                  color="white"
-                >
-                  {card.title}
-                </Heading>
-                <Text
-                  fontSize={{ base: 'sm', md: 'md', lg: 'lg' }}
-                  color="white"
-                >
-                  {card.text}
-                </Text>
+                
               </Stack>
             </Container>
           </Box>
@@ -249,7 +185,8 @@ const CaptionCarouselDesktop: React.FC = () => {
     </Box>
   );
 };
-const CaptionCarousel: React.FC = () => {
+
+const CaptionCarousel: React.FC<CaptionCarouselProps> = ({ cards }) => {
   const [isMobile] = useMediaQuery('(max-width: 320px)');
   const [isTablet2] = useMediaQuery('(max-width: 540px)');
   const [isTablet3] = useMediaQuery('(min-width: 280px)');
@@ -258,9 +195,9 @@ const CaptionCarousel: React.FC = () => {
   return (
     <>
       {isMobile ? (
-        <MobileCaptionCarousel width="160%" />
+        <MobileCaptionCarousel cards={cards} width="160%" />
       ) : (
-        <CaptionCarouselDesktop />
+        <CaptionCarouselDesktop cards={cards} />
       )}
     </>
   );

@@ -1,6 +1,7 @@
-// components/Trips/TripsList.tsx
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Table, Thead, Tbody, Tr, Th, Td, useDisclosure, useToast, Stack, useBreakpointValue, Text, Flex } from '@chakra-ui/react';
+import {
+  Box, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Table, Thead, Tbody, Tr, Th, Td, useDisclosure, useToast, Stack, useBreakpointValue, Text, Flex,
+} from '@chakra-ui/react';
 import { createClient } from '@/utils/supabase/component';
 import UploadFormWithDetails from '../Pages/UploadFormWithDetails';
 
@@ -32,6 +33,31 @@ const TripsList: React.FC = () => {
     fetchTrips();
   }, [toast]);
 
+  const deleteTrip = async (id: number) => {
+    const supabase = createClient();
+    const { error } = await supabase.from('Trips').delete().eq('id', id);
+
+    if (error) {
+      toast({
+        title: 'Error deleting trip',
+        description: error.message,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    setTrips(trips.filter((trip) => trip.id !== id));
+    toast({
+      title: 'Trip deleted',
+      description: `Trip with ID ${id} has been deleted successfully.`,
+      status: 'success',
+      duration: 4000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Box p={4}>
       <Flex
@@ -58,6 +84,13 @@ const TripsList: React.FC = () => {
                 <Text>{trip.descripcion}</Text>
                 <Text>{trip.fecha}</Text>
                 <Text>{trip.actividad}</Text>
+                <Button
+                  colorScheme="red"
+                  onClick={() => deleteTrip(trip.id)}
+                  mt={2}
+                >
+                  Delete
+                </Button>
               </Box>
             ))}
           </Box>
@@ -70,6 +103,7 @@ const TripsList: React.FC = () => {
                   <Th>Descripción</Th>
                   <Th>Fecha</Th>
                   <Th>Actividad</Th>
+                  <Th>Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -79,6 +113,11 @@ const TripsList: React.FC = () => {
                     <Td>{trip.descripcion}</Td>
                     <Td>{trip.fecha}</Td>
                     <Td>{trip.actividad}</Td>
+                    <Td>
+                      <Button colorScheme="red" onClick={() => deleteTrip(trip.id)}>
+                        Delete
+                      </Button>
+                    </Td>
                   </Tr>
                 ))}
               </Tbody>

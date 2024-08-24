@@ -1,28 +1,28 @@
-import { Box, Heading, Text, Button, useStyleConfig, BoxProps, useMediaQuery } from '@chakra-ui/react';
+import { Box, Text, Button, useStyleConfig, BoxProps, useMediaQuery, Image } from '@chakra-ui/react';
 import { useRef, useEffect, useState } from 'react';
 
 interface VideoHeroProps {
-  title: string;
+  logoSrc: string;
   description: string;
   videoSrc: string;
 }
 
-const VideoHero: React.FC<VideoHeroProps> = ({ title, description, videoSrc }) => {
+const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoStyle = useStyleConfig("VideoHero");
 
   const [opacity, setOpacity] = useState<number>(0);
 
-  // Media query to detect if the device is an iPhone or mobile
   const [isMobile] = useMediaQuery('(max-width: 320px)');
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setOpacity(1);
-    }, 1000); // Adjust the delay as needed
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, []); // Run only once on component mount
+  }, []);
+
   const handleButtonClick = () => {
     const videoElement = document.querySelector('video') as HTMLVideoElement;
   
@@ -38,15 +38,14 @@ const VideoHero: React.FC<VideoHeroProps> = ({ title, description, videoSrc }) =
   return (
     <Box
       position="relative"
-      width={isMobile ? "160%" : "100%"} // Adjust width based on device type
-      height="100vh" // Ensure the Box takes the full height of the viewport
+      width={isMobile ? "160%" : "100%"}
+      height="100vh"
       overflow="hidden"
       sx={{
         ':hover .shadow-overlay': { opacity: 0 },
         ':hover .video-content': { opacity: 1 },
       }}
     >
-      
       <video
         ref={videoRef}
         src={videoSrc}
@@ -78,19 +77,26 @@ const VideoHero: React.FC<VideoHeroProps> = ({ title, description, videoSrc }) =
           opacity: opacity,
           transition: 'opacity 0.3s ease-in-out',
         } as BoxProps}
-        px={[4, 8]} // Responsive padding: [base, md]
-        py={[4, 6]} // Responsive padding: [base, md]
+        px={[4, 8]}
+        py={[4, 6]}
         position="absolute"
         top="50%"
         left="50%"
         transform="translate(-50%, -50%)"
         textAlign="center"
         color="white"
-        maxW="90vw" // Make sure the content fits within the viewport width
+        maxW="90vw"
       >
-       <Heading as="h1" size={["lg", "2xl"]} textColor={"gray.800"} mb={[2, 4]} shadow={'2xl'}  bgColor={'gray.100'} p={4} >{title}</Heading> 
-        <Text fontSize={["md", "lg"]} mb={[2, 4]}>{description}</Text>
-        <Button bgColor={'blue.400'} textColor={'whitesmoke'}size={["md", "lg"]} onClick={handleButtonClick}>Watch Now</Button>
+        <Box
+          mb={[2, 4]}
+          shadow={'sm'}
+        
+          p={4}
+          display="inline-block"
+        >
+          <Image src={logoSrc} alt="Logo" maxH="250px" width={"250px"}  rounded={10} />
+        </Box>
+        
       </Box>
     </Box>
   );
