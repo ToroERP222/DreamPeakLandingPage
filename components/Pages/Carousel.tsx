@@ -8,6 +8,7 @@ import {
   Text,
   Container,
   useMediaQuery,
+  Center,
 } from '@chakra-ui/react';
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
 import Slider from 'react-slick';
@@ -112,7 +113,9 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
   const side = useBreakpointValue({ base: '10%', md: '40px' });
 
   return (
-    <Box position="relative" height={{ base: '400px', md: '600px' }} width="full" overflow="hidden">
+    <>
+  
+    <Box position="relative" backgroundColor={'black'} height={{ base: '400px', md: '600px' }} width="full" overflow="hidden">
       <link
         rel="stylesheet"
         type="text/css"
@@ -159,10 +162,10 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
             key={index}
             height={{ base: '400px', md: '800px' }}
             position="relative"
-            w={'100%'}
+            
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
-            backgroundSize="cover"
+            backgroundSize={{ base: 'contain', md: 'contain' }}
             backgroundImage={`/uploads/${card.imagenName}`}
           >
             <Container size="container.lg" height="100%" position="relative">
@@ -184,6 +187,7 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
         ))}
       </Slider>
     </Box>
+    </>
   );
 };
 
