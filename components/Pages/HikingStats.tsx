@@ -3,9 +3,15 @@ import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 
 const DreamPeakComponent: React.FC = () => {
   // Determine text size and padding based on screen size
-  const headingSize = useBreakpointValue({ base: '2xl', md: '3xl' });
-  const fontSize = useBreakpointValue({ base: 'lg', md: 'xl' });
-  const padding = useBreakpointValue({ base: 4, md: 10 });
+  const headingSize = useBreakpointValue({ base: 'xl', md: '3xl' });
+  const fontSize = useBreakpointValue({ base: 'sm', md: 'lg' });
+  const padding = useBreakpointValue({ base: 2, md: 10 });
+
+  // Set margin-top based on screen size
+  const marginTop = useBreakpointValue({ base: '8', md: '0', '435px': '20' });
+
+  // Adjust margin-bottom to fit smaller screens
+  const marginBottom = useBreakpointValue({ base: '16', md: '0' });
 
   return (
     <Box
@@ -39,26 +45,27 @@ const DreamPeakComponent: React.FC = () => {
         {/* Left-aligned content on medium screens and up */}
         <Box
           flex="1"
-          maxWidth={{ base: '100%', md: '50%' }}
+          maxWidth={{ base: '90%', md: '50%' }} // Reduce the max-width on small screens
           textAlign={{ base: 'center', md: 'left' }}
-          mb={{ base: 8, md: 0 }}
+           // Reduce margin-bottom on small screens
+          mt={marginTop}  // Apply the margin-top based on screen size
+          mb={marginBottom}  // Apply the margin-bottom based on screen size
         >
           <Heading
             as="h1"
             size={headingSize}
             mb={2}
-            
             fontWeight="bold"
-            color="#FFFFFF"  // Pure white color
-            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+            color="white"  // Pure white color
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
           >
             DREAM PEAK.
           </Heading>
           <Text
             fontSize={fontSize}
-            mb={6}
-            color="#FFFFFF"  // Pure white color
-            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+            mb={4}  // Reduce margin-bottom
+            color="white"  // Pure white color
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
           >
             THE TRAVEL OUTDOOR COMPANY.
           </Text>
@@ -67,34 +74,35 @@ const DreamPeakComponent: React.FC = () => {
         {/* Right-aligned content on medium screens and up */}
         <Box
           flex="1"
-          maxWidth={{ base: '100%', md: '50%' }}
+          maxWidth={{ base: '90%', md: '50%' }} // Reduce the max-width on small screens
           textAlign={{ base: 'center', md: 'right' }}
+          mb={marginBottom}  // Apply the margin-bottom based on screen size
         >
           <Text
             fontSize={fontSize}
-            lineHeight="1.8"
-            color="#FFFFFF"  // Pure white color
-            textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)" 
-            textAlign="justify" 
+            lineHeight="1.6"  // Adjust line-height for better readability
+            color="white"  // Pure white color
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)" 
+            textAlign="justify"
           >
             DREAM PEAK está formado por amantes de la aventura y los deportes. 
-            <br/>
+            <br />
             Es por eso que queremos compartirte nuestra pasión. 
-            <br/>
+            <br />
             Te invitamos a acompañarnos recorriendo cañones, desiertos, bosques 
-            <br/>
+            <br />
             o escalando montañas.
             <br /><br />
             Nuestros guías cuentan con experiencia en senderismo, montañismo, 
-            <br/>
+            <br />
             técnicas verticales, así como rescate y primeros auxilios profesionales.
-             <br/>
-             No importa la situación, siempre estarás acompañado 
-             <br/>
-             por profesionales listos para apoyarte en lo que necesites.
+            <br />
+            No importa la situación, siempre estarás acompañado 
+            <br />
+            por profesionales listos para apoyarte en lo que necesites.
             <br /><br />
             En todas nuestras salidas a montaña se te proporcionará 
-            <br/>
+            <br />
             el equipo necesario para llevar a cabo la actividad requerida de manera segura.
           </Text>
         </Box>

@@ -14,6 +14,7 @@ import HikingStats from '@/components/Pages/HikingStats';
 import TripWithDates from '@/components/Tools/TripsWithDates';
 import CallToActionRegister from '@/components/Tools/CallToActionRegister';
 import CookieBanner from '@/components/Tools/CookieBanner';
+import AdventureBanner from '@/components/Pages/AdventureBanner';
 
 interface Profile {
   id: number;
@@ -137,12 +138,17 @@ const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
           <Box  >
             <HikingStats />
           </Box>
+          <Box id="contact">
+            <AdventureBanner/>
+          </Box>
           <Box >
             <Carousel cards={trips || []} />
           </Box>
-          <Box id="contact">
+         
+          <Box >
             <CallToActionRegister />
           </Box>
+          
           <Box id="calendar" py={0}>
             <Cuestionario />
           </Box>

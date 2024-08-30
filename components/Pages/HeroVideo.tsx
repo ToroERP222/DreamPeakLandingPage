@@ -1,4 +1,4 @@
-import { Box, Text, Button, useStyleConfig, BoxProps, useMediaQuery, Image } from '@chakra-ui/react';
+import { Box, useStyleConfig, BoxProps, useMediaQuery, Image } from '@chakra-ui/react';
 import { useRef, useEffect, useState } from 'react';
 
 interface VideoHeroProps {
@@ -12,7 +12,6 @@ const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc })
   const videoStyle = useStyleConfig("VideoHero");
 
   const [opacity, setOpacity] = useState<number>(0);
-
   const [isMobile] = useMediaQuery('(max-width: 320px)');
 
   useEffect(() => {
@@ -24,21 +23,18 @@ const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc })
   }, []);
 
   const handleButtonClick = () => {
-    const videoElement = document.querySelector('video') as HTMLVideoElement;
-  
-    if (videoElement) {
-      if (videoElement.requestFullscreen) {
-        videoElement.requestFullscreen();
-      } else {
-        console.error('Fullscreen API is not supported');
-      }
+    const videoElement = videoRef.current;
+    if (videoElement && videoElement.requestFullscreen) {
+      videoElement.requestFullscreen();
+    } else {
+      console.error('Fullscreen API is not supported');
     }
-  }
+  };
 
   return (
     <Box
       position="relative"
-      width={isMobile ? "160%" : "100%"}
+      width="100%"
       height="100vh"
       overflow="hidden"
       sx={{
@@ -69,6 +65,7 @@ const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc })
         bgGradient="linear(to-b, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8))"
         opacity={1}
         transition="opacity 0.2s ease-in-out"
+        zIndex={1}
       />
       <Box
         className="video-content"
@@ -77,7 +74,7 @@ const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc })
           opacity: opacity,
           transition: 'opacity 0.3s ease-in-out',
         } as BoxProps}
-        px={[4, 8]}
+        px={[4, 6]}
         py={[4, 6]}
         position="absolute"
         top="50%"
@@ -85,18 +82,17 @@ const VideoHero: React.FC<VideoHeroProps> = ({ logoSrc, description, videoSrc })
         transform="translate(-50%, -50%)"
         textAlign="center"
         color="white"
-        maxW="90vw"
+        maxW="80vw"
+        zIndex={2}
       >
         <Box
           mb={[2, 4]}
-          shadow={'sm'}
-        
+          shadow="sm"
           p={4}
           display="inline-block"
         >
-          <Image src={logoSrc} alt="Logo" maxH="250px" width={"250px"}  rounded={10} />
+          <Image src={logoSrc} alt="Logo" maxH="200px" width="auto" rounded={10} />
         </Box>
-        
       </Box>
     </Box>
   );
