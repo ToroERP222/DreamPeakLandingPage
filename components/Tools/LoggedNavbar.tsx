@@ -101,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
         />
         <HStack spacing={8} alignItems={'center'}>
           <Box onClick={handleLogoClick} cursor="pointer">
-            <Image src="/Logo2.png" alt="Logo" boxSize="80px" />
+            <Image src="/Logo2.png" alt="Logo" boxSize="140px" />
           </Box>
           {!isLoginPage && !isRegisterPage && !user && (
             <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>

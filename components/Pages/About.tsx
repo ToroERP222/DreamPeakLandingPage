@@ -73,10 +73,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
   }, [controls]);
 
   return (
+    <Box 
+    height={'70vh'}>
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={controls}
+    
       transition={{ duration: 0.5 }}
       style={{ width: '100%' }}
     >
@@ -88,6 +91,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
         overflow="hidden"
         borderColor="gray.200"
         shadow="md"
+        
+        
         backgroundColor="gray.300"
         _hover={{ boxShadow: '2xl' }}
         p={0}
@@ -103,7 +108,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
           />
         </Center>
         <Center>
-          <Box p={4}>
+          <Box p={4} >
             <Heading size="md" as="h3" mb={2}>
               {title}
             </Heading>
@@ -113,6 +118,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description, image, link
         </Center>
       </Box>
     </motion.div>
+    </Box>
   );
 };
 

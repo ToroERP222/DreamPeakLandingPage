@@ -72,10 +72,14 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
   const handleLogoClick = () => {
     router.push('/'); // Redirect to homepage when logo is clicked
   };
+
+  // Determine the background color based on the route
+  const backgroundColor = router.pathname === '/register' ? 'black' : (scrolled ? useColorModeValue('white', 'gray.800') : 'transparent');
+
   return (
     <>
       <Box
-        bg={scrolled ? useColorModeValue('white', 'gray.800') : 'transparent'}
+        bg={backgroundColor} // Apply the determined background color
         px={4}
         position="fixed"
         width="100%"
@@ -93,8 +97,8 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-          <Box onClick={handleLogoClick} cursor="pointer">
-              <Image src="/Logo2.png" alt="Logo" boxSize="40px" />
+            <Box onClick={handleLogoClick} cursor="pointer">
+              <Image src="/Logo2.png" alt="Logo" boxSize="140px" />
             </Box>
             {!isAuthPage && !user && (
               <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>

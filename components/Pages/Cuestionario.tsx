@@ -76,63 +76,67 @@ const CarouselQuestionnaire: React.FC<CarouselQuestionnaireProps> = ({ questions
 
   const [isMobile] = useMediaQuery('(max-width: 320px)');
   const buttonSize = useBreakpointValue({ base: 'sm', md: 'md', lg: 'lg' });
-  const spacing = useBreakpointValue({ base: 2, md: 4 });
+  const spacing = useBreakpointValue({ base: 4, md: 6 });
 
   const MotionBox = motion(Box);
   const animationVariants = {
     hidden: { opacity: 0 },
     visible: {
-      opacity: 2,
-      transition: { duration: 1 },
+      opacity: 1,
+      transition: { duration: 0.8 },
     },
   };
 
   return (
-    <Center>
-      <MotionBox
-        display="flex"
-        alignItems="center"
-        shadow="xl"
-        p={10}
-        borderRadius="md"
-        justifyContent="center"
-        position="relative"
-        border="1px solid"
-        borderColor="gray.200"
-        w={isMobile ? "100%" : "100%"}
-        initial="hidden"
-        animate="visible"
-        variants={animationVariants}
-      >
-        <Stack spacing={spacing} w="100%">
-          {isFinished && totalScore !== null ? (
-            <>
-              <Heading size="lg" textAlign="center">
-                {getDifficultyLevel(totalScore)}
-              </Heading>
-              <Button onClick={handleReset} size={buttonSize} colorScheme="teal">
-                Reiniciar
-              </Button>
-            </>
-          ) : (
-            <>
-              <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-                {currentQuestion.text}
-              </Text>
-              <RadioGroup onChange={(value) => handleAnswerChange(parseInt(value))} value={answers[currentIndex].toString()}>
-                <Stack spacing={spacing}>
-                  {currentQuestion.options.map((option, index) => (
-                    <Radio key={index} value={option.value.toString()} colorScheme="teal">
-                      {option.label}
-                    </Radio>
-                  ))}
-                </Stack>
-              </RadioGroup>
-            </>
-          )}
-        </Stack>
-      </MotionBox>
-    </Center>
+    <Box height="100vh" width="100vw">
+      <Center>
+        <MotionBox
+          display="flex"
+          alignItems="center"
+          shadow="xl"
+          p={10}
+          borderRadius="md"
+          justifyContent="center"
+          position="relative"
+          border="1px solid"
+          borderColor="gray.200"
+          w={isMobile ? "95%" : "70%"}
+          h={isMobile ? "60%" : "auto"}
+          initial="hidden"
+          animate="visible"
+          variants={animationVariants}
+          bg="white"
+        >
+          <Stack spacing={spacing} w="100%">
+            {isFinished && totalScore !== null ? (
+              <>
+                <Heading size="lg" textAlign="center">
+                  {getDifficultyLevel(totalScore)}
+                </Heading>
+                <Button onClick={handleReset} size={buttonSize} colorScheme="teal">
+                  Reiniciar
+                </Button>
+              </>
+            ) : (
+              <>
+                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
+                  {currentQuestion.text}
+                </Text>
+                <RadioGroup onChange={(value) => handleAnswerChange(parseInt(value))} value={answers[currentIndex].toString()}>
+                  <Stack spacing={spacing}>
+                    {currentQuestion.options.map((option, index) => (
+                      <Radio key={index} value={option.value.toString()} colorScheme="teal">
+                        {option.label}
+                      </Radio>
+                    ))}
+                  </Stack>
+                </RadioGroup>
+              </>
+            )}
+          </Stack>
+        </MotionBox>
+      </Center>
+    </Box>
   );
 };
 
@@ -166,15 +170,16 @@ const ResponsiveSEOButtonModal: React.FC<ResponsiveSEOButtonModalProps> = ({ but
   return (
     <Center>
       <Box
-        w={isMobile ? '160%' : '120%'}
+        w={isMobile ? '160%' : '140%'}
         position="relative"
         bgImage="url('/fondo4.jpg')"
         bgSize="cover"
         bgPosition="center"
+        height={'100vh'}
         p={10}
       >
         <Box position="absolute" top="0" left="0" right="0" bottom="0" bg="blackAlpha.600" zIndex={0} />
-        <Box position="relative" zIndex={1}>
+        <Box position="relative" mt={10} zIndex={1}>
           <Heading as="h1" p={4} textAlign="center" mb={4} color="white">
             ¿En qué grado te encuentras?
           </Heading>
@@ -254,38 +259,45 @@ const Cuestionario: React.FC = () => {
       id: 3,
       text: "Evalúa tu condición física:",
       options: [
-        { label: "No realizo actividad física regularmente.", value: 1 },
-        { label: "Realizo ejercicio de forma esporádica.", value: 2 },
-        { label: "Realizo ejercicio moderado de forma regular.", value: 3 },
-        { label: "Tengo buena condición física y entreno regularmente.", value: 4 },
-        { label: "Estoy en excelente condición física y entreno intensamente.", value: 5 },
+        { label: "Pobre, tengo poca resistencia física.", value: 1 },
+        { label: "Por debajo de la media, me canso fácilmente.", value: 2 },
+        { label: "Media, puedo mantener un ritmo constante.", value: 3 },
+        { label: "Buena, tengo buena resistencia y puedo afrontar retos.", value: 4 },
+        { label: "Excelente, tengo una resistencia física muy alta.", value: 5 },
       ],
     },
     {
       id: 4,
-      text: "¿Cuál es la duración promedio de tus caminatas o rutas?",
+      text: "¿Con qué frecuencia practicas deportes al aire libre?",
       options: [
-        { label: "Menos de 2 horas.", value: 1 },
-        { label: "Entre 2 y 4 horas.", value: 2 },
-        { label: "Entre 4 y 6 horas.", value: 3 },
-        { label: "Entre 6 y 8 horas.", value: 4 },
-        { label: "Más de 8 horas.", value: 5 },
+        { label: "Nunca practico deportes al aire libre.", value: 1 },
+        { label: "Rara vez, solo ocasionalmente.", value: 2 },
+        { label: "Ocasionalmente, unas pocas veces al año.", value: 3 },
+        { label: "Regularmente, al menos una vez al mes.", value: 4 },
+        { label: "Frecuentemente, varias veces al mes.", value: 5 },
       ],
     },
     {
       id: 5,
-      text: "¿Cuál es el nivel máximo de altitud que has alcanzado en tus caminatas?",
+      text: "¿Cuánto tiempo puedes caminar sin sentirte fatigado?",
       options: [
-        { label: "Menos de 500 metros sobre el nivel del mar.", value: 1 },
-        { label: "500 - 1000 metros sobre el nivel del mar.", value: 2 },
-        { label: "1000 - 2000 metros sobre el nivel del mar.", value: 3 },
-        { label: "2000 - 3000 metros sobre el nivel del mar.", value: 4 },
-        { label: "Más de 3000 metros sobre el nivel del mar.", value: 5 },
+        { label: "Menos de 1 hora.", value: 1 },
+        { label: "1 a 2 horas.", value: 2 },
+        { label: "2 a 4 horas.", value: 3 },
+        { label: "4 a 6 horas.", value: 4 },
+        { label: "Más de 6 horas.", value: 5 },
       ],
     },
   ];
 
-  return <ResponsiveSEOButtonModal buttonText="Empezar" questions={questions} />;
+  return (
+   
+     <ResponsiveSEOButtonModal
+      buttonText="Realiza el Test"
+      questions={questions}
+    />
+ 
+  );
 };
 
 export default Cuestionario;
