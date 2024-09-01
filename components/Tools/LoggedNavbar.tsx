@@ -24,9 +24,10 @@ import { createClient } from '@/utils/supabase/component';
 import NavLink from './NavLink';
 
 const Links = [
-  { label: 'Acerca', id: 'about' },
+ 
   { label: 'Contacto', id: 'contact' },
   { label: 'Cuestionario', id: 'calendar' },
+  { label: 'Acerca', id: 'about' }
 ];
 
 interface NavbarProps {

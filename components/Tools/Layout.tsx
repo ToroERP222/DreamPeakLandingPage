@@ -13,7 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children ,user}: LayoutProps) => {
   return (
     <Box>
       <Navbar user={null} />
-      <Box as="main" pt={100}>
+      <Box as="main" >
         {children}
       </Box>
       <Footer />

@@ -27,7 +27,7 @@ const CallToActionRegister: React.FC = () => {
     <Box
       position="relative"
       width="100%"
-      minHeight="80vh"
+      height={'100vh'}
       display="flex"
       alignItems="center"
       justifyContent="center"

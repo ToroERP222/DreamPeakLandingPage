@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, Text, useBreakpointValue } from '@chakra-ui/react';
 
 const DreamPeakComponent: React.FC = () => {
-  // Determine text size and padding based on screen size
+  const [headingOffset, setHeadingOffset] = useState(0);
+  const [textOffset, setTextOffset] = useState(0);
+  const [additionalTextOffset, setAdditionalTextOffset] = useState(0);
+
   const headingSize = useBreakpointValue({ base: 'xl', md: '3xl' });
   const fontSize = useBreakpointValue({ base: 'sm', md: 'lg' });
   const padding = useBreakpointValue({ base: 2, md: 10 });
 
-  // Set margin-top based on screen size
   const marginTop = useBreakpointValue({ base: '8', md: '0', '435px': '20' });
-
-  // Adjust margin-bottom to fit smaller screens
   const marginBottom = useBreakpointValue({ base: '16', md: '0' });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Ajusta la velocidad del efecto parallax para el heading, el texto y el texto adicional
+      setHeadingOffset(scrollY * 0.1); // Ajusta el valor para cambiar la velocidad del efecto parallax
+      setTextOffset(scrollY * 0.05); // Ajusta el valor para cambiar la velocidad del efecto parallax
+      setAdditionalTextOffset(scrollY * 0.1); // Ajusta el valor para cambiar la velocidad del efecto parallax del texto adicional
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <Box
       position="relative"
-      height="100vh"
-      backgroundImage="url('/fondo3.jpg')"  // Replace with your image path
+      height="120vh" // Mantén la altura del 120% del viewport
+      backgroundImage="url('/fondo3.jpg')" // Reemplaza con la ruta de tu imagen
       backgroundSize="cover"
-      backgroundPosition="center"
+      backgroundPosition="center top" // Fondo estático
     >
-      {/* Overlay for darkening the background image */}
       <Box
         position="absolute"
         top={0}
@@ -29,61 +44,64 @@ const DreamPeakComponent: React.FC = () => {
         right={0}
         bottom={0}
         backgroundColor="rgba(0, 0, 0, 0.6)"
-        zIndex={1} // Ensure the overlay is below the text
+        zIndex={1} 
       />
 
       <Flex
-        direction={{ base: 'column', md: 'row' }}  // Stack vertically on small screens
+        direction={{ base: 'column', md: 'row' }}
         justifyContent="center"
         alignItems="center"
         p={padding}
         height="100%"
-        zIndex={2} // Ensure the content is above the overlay
+        zIndex={2}
         position="relative"
-        textAlign={{ base: 'center', md: 'left' }} // Center text on small screens
+        textAlign={{ base: 'center', md: 'left' }}
       >
-        {/* Left-aligned content on medium screens and up */}
         <Box
           flex="1"
-          maxWidth={{ base: '90%', md: '50%' }} // Reduce the max-width on small screens
+          maxWidth={{ base: '90%', md: '50%' }}
           textAlign={{ base: 'center', md: 'left' }}
-           // Reduce margin-bottom on small screens
-          mt={marginTop}  // Apply the margin-top based on screen size
-          mb={marginBottom}  // Apply the margin-bottom based on screen size
+          mt={marginTop}
+          mb={marginBottom}
         >
           <Heading
             as="h1"
             size={headingSize}
             mb={2}
             fontWeight="bold"
-            color="white"  // Pure white color
-            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+            color="white"
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"
+            transform={`translateY(-${headingOffset}px)`} // Aplica el efecto parallax al heading
+            transition="transform 0.1s ease-out"
           >
             DREAM PEAK.
           </Heading>
           <Text
             fontSize={fontSize}
-            mb={4}  // Reduce margin-bottom
-            color="white"  // Pure white color
-            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"  // Shadow for better visibility
+            mb={4}
+            color="white"
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"
+            transform={`translateY(-${textOffset}px)`} // Aplica el efecto parallax al texto
+            transition="transform 0.1s ease-out"
           >
             THE TRAVEL OUTDOOR COMPANY.
           </Text>
         </Box>
 
-        {/* Right-aligned content on medium screens and up */}
         <Box
           flex="1"
-          maxWidth={{ base: '90%', md: '50%' }} // Reduce the max-width on small screens
+          maxWidth={{ base: '90%', md: '50%' }}
           textAlign={{ base: 'center', md: 'right' }}
-          mb={marginBottom}  // Apply the margin-bottom based on screen size
+          mb={marginBottom}
         >
           <Text
             fontSize={fontSize}
-            lineHeight="1.6"  // Adjust line-height for better readability
-            color="white"  // Pure white color
-            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)" 
+            lineHeight="1.6"
+            color="white"
+            textShadow="1px 1px 4px rgba(0, 0, 0, 0.8)"
             textAlign="justify"
+            transform={`translateY(-${additionalTextOffset}px)`} // Aplica el efecto parallax al texto adicional
+            transition="transform 0.1s ease-out"
           >
             DREAM PEAK está formado por amantes de la aventura y los deportes. 
             <br />

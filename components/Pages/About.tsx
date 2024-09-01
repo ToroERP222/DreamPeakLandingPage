@@ -127,7 +127,11 @@ const About: React.FC = () => {
   const bg = useColorModeValue('gray.100', 'gray.800');
 
   return (
-    <Box bg={bg} p={8} w={isMobile ? '160%' : '100%'}>
+    <Box 
+    bg={bg} 
+    p={8} 
+    w={isMobile ? '160%' : '100%'}
+    height={'100vh'}>
       <Flex direction="column" alignItems="center">
         <Center>
           <Heading as="h1" size="2xl" mb={4}>
