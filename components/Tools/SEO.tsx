@@ -22,10 +22,7 @@ const SEO: React.FC<SEOProps> = ({ title, description }) => {
           "contentUrl": "Video URL",
           "embedUrl": "Embed URL"
         }
-      `}</script>
-    
-        
-        
+      `}</script>      
         <meta name="viewport" content="width=device-width, initial-scale=1" />
     
     </Head>

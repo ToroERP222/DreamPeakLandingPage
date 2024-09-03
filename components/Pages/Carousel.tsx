@@ -12,8 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { BiLeftArrowAlt, BiRightArrowAlt } from 'react-icons/bi';
 import Slider from 'react-slick';
-import { motion } from 'framer-motion';
-
 
 interface Trip {
   fecha: string;
@@ -53,7 +51,6 @@ const mobileSettings = {
 };
 
 const MobileCaptionCarousel: React.FC<{ cards: Trip[], width: string }> = ({ cards, width }) => {
-  console.log("trips mobile",cards)
   return (
     <Box position="relative" height="930px" width={width} overflow="hidden">
       <link
@@ -107,15 +104,12 @@ const MobileCaptionCarousel: React.FC<{ cards: Trip[], width: string }> = ({ car
 };
 
 const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
-  console.log("trips desktop",cards)
   const [slider, setSlider] = useState<Slider | null>(null);
   const top = useBreakpointValue({ base: '90%', md: '50%' });
   const side = useBreakpointValue({ base: '10%', md: '40px' });
 
   return (
-    <>
-  
-    <Box position="relative" backgroundColor={'black'} height={{ base: '400px', md: '600px' }} width="full" overflow="hidden">
+    <Box position="relative" backgroundColor="black" height={{ base: '400px', md: '600px', lg: '800px' }} width="full" overflow="hidden">
       <link
         rel="stylesheet"
         type="text/css"
@@ -134,12 +128,16 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
         position="absolute"
         left={side}
         top={top}
-        color={'white'}
+        color="white"
+        backgroundColor="rgba(128, 128, 128, 0.8)"
+        borderRadius="full"
         transform="translate(0%, -50%)"
         zIndex={2}
         onClick={() => slider?.slickPrev()}
+        _hover={{ backgroundColor: 'gray.600' }}
+        size={useBreakpointValue({ base: 'sm', md: 'md', lg: 'lg' })}
       >
-        <BiLeftArrowAlt size="40px" />
+        <BiLeftArrowAlt size={useBreakpointValue({ base: '20px', md: '30px', lg: '40px' })} />
       </IconButton>
 
       <IconButton
@@ -148,24 +146,27 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
         position="absolute"
         right={side}
         top={top}
-        color={'white'}
+        color="white"
+        backgroundColor="rgba(128, 128, 128, 0.8)"
+        borderRadius="full"
         transform="translate(0%, -50%)"
         zIndex={2}
         onClick={() => slider?.slickNext()}
+        _hover={{ backgroundColor: 'gray.600' }}
+        size={useBreakpointValue({ base: 'sm', md: 'md', lg: 'lg' })}
       >
-        <BiRightArrowAlt size="40px" />
+        <BiRightArrowAlt size={useBreakpointValue({ base: '20px', md: '30px', lg: '40px' })} />
       </IconButton>
-
+      
       <Slider {...settings} ref={(slider: any) => setSlider(slider)}>
         {cards.map((card, index) => (
           <Box
             key={index}
-            height={{ base: '400px', md: '800px' }}
+            height={{ base: '300px', md: '500px', lg: '800px' }}
             position="relative"
-            
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
-            backgroundSize={{ base: 'contain', md: 'contain' }}
+            backgroundSize="cover"
             backgroundImage={`/uploads/${card.imagenName}`}
           >
             <Container size="container.lg" height="100%" position="relative">
@@ -180,22 +181,39 @@ const CaptionCarouselDesktop: React.FC<{ cards: Trip[] }> = ({ cards }) => {
                 p={4}
                 borderRadius="md"
               >
-                
               </Stack>
             </Container>
           </Box>
         ))}
       </Slider>
+      
+      <Heading
+        as="h2"
+        size={useBreakpointValue({ base: 'md', md: 'lg', lg: '3xl' })}
+        color="white"
+        fontWeight="bold"
+        textTransform="uppercase"
+        position="absolute"
+        bottom={{ base: '100px', md: '40px', lg: '0px' }}
+        left="0px"
+        zIndex={3}
+        textColor="gray.900"
+        textShadow="1px 1px 2px rgba(0, 0, 0, 0.8)"
+        bg="rgba(192, 192, 192, 0.5)"
+        p={useBreakpointValue({ base: 4, md: 6, lg: 8 })}
+        pr={useBreakpointValue({ base: 16, md: 24, lg: 32 })}
+        pl={useBreakpointValue({ base: 8, md: 16, lg: 32 })}
+        borderRadius="0 20px 0px 0"
+      >
+        Próximas Salidas
+      </Heading>
     </Box>
-    </>
   );
 };
 
+
 const CaptionCarousel: React.FC<CaptionCarouselProps> = ({ cards }) => {
   const [isMobile] = useMediaQuery('(max-width: 320px)');
-  const [isTablet2] = useMediaQuery('(max-width: 540px)');
-  const [isTablet3] = useMediaQuery('(min-width: 280px)');
-  const [isTablet] = useMediaQuery('(min-width: 430px) ');
 
   return (
     <>
