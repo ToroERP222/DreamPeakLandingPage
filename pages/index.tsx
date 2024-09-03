@@ -138,20 +138,20 @@ const Home: React.FC<HomeProps> = ({ user, profile, trips }) => {
           <Box  >
             <HikingStats />
           </Box>
-          <Box id="contact">
-            <AdventureBanner/>
+          <Box >
+            <CallToActionRegister />
           </Box>
           <Box >
             <Carousel cards={trips || []} />
           </Box>
-         
-          <Box >
-            <CallToActionRegister />
-          </Box>
-          
           <Box id="calendar" py={0}>
             <Cuestionario />
           </Box>
+          
+          <Box id="contact">
+            <AdventureBanner/>
+          </Box>
+          
           <Box id="about" py={0}>
             <About />
           </Box>
